@@ -1,0 +1,33 @@
+{
+  "name": "polyglot",
+  "version": "1.0.0",
+  "description": "A bot to automatically translate your messages in your discord servers.",
+  "main": "index.js",
+  "dependencies": {
+    "@iamtraction/google-translate": "^2.0.1",
+    "discord.js": "^14.6.0",
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.20"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yaasiin-ayeva/Polyglot.git"
+  },
+  "keywords": [
+    "Polyglot",
+    "Discord",
+    "Google Traduction"
+  ],
+  "author": "Yaasiin AYEVA",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yaasiin-ayeva/Polyglot/issues"
+  },
+  "homepage": "https://github.com/yaasiin-ayeva/Polyglot#readme"
+}
