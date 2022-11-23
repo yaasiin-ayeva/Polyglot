@@ -1,5 +1,5 @@
 # Polyglot
-Awesome bot translator for your discord server.
+Awesome translator bot for your discord server.
 
 ## Try it here
 https://discord.gg/cangyU5E
