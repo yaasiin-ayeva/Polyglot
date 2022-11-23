@@ -20,7 +20,7 @@ npm run dev
 ## Easy to use
 To translate a sentence into another language, enter this command in your discord server
 ```
-!translate [code-lang] [sentence-to-translate]
+!translate {code-lang} {sentence-to-translate}
 ```
 
 e.g
