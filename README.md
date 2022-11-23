@@ -1,6 +1,9 @@
 # Polyglot
 Awesome bot translator for your discord server.
 
+## Try it here
+https://discord.gg/cangyU5E
+
 ## Steps to run this project
 
 1. Run :
