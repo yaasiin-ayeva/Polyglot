@@ -6,6 +6,8 @@ https://discord.gg/cangyU5E
 
 ## Steps to run this project
 
+First of all, you need to setup your `.env` file. And then, put on it your discord api token. 
+
 1. Run :
 ```bash
 npm i
