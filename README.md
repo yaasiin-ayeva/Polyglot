@@ -2,7 +2,7 @@
 Awesome translator bot for your discord server.
 
 ## Try it here
-https://discord.gg/cangyU5E
+https://discord.gg/7Vb7TGeA7T
 
 ## Steps to run this project
 
