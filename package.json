@@ -7,7 +7,7 @@
     "@iamtraction/google-translate": "^2.0.1",
     "discord.js": "^14.8.0",
     "dotenv": "^16.4.5",
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.1.0"
   },
   "scripts": {
     "start": "node index.js",
