@@ -1,4 +1,4 @@
-# Polyglot
+# Polyglot [![Netlify Status](https://api.netlify.com/api/v1/badges/91210cfa-886b-4b2a-b41b-8f62aff12c26/deploy-status)](https://app.netlify.com/sites/polyglot-js/deploys)
 Awesome translator bot for your discord server.
 
 ## Try it here
