@@ -1,16 +1,19 @@
-import { Client, Events, GatewayIntentBits } from "discord.js";
-import { config } from "dotenv";
+import { Client, Events, GatewayIntentBits, Message } from "discord.js";
+import { config } from 'dotenv';
+import { createRequire } from "module";
+const require = createRequire(import.meta.url)
+const translate = require('@iamtraction/google-translate');
 
 config();
 
-const { DISCORD_TOKEN } = process.env;
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 
-// Define "require"
-import { createRequire } from "module";
-const require = createRequire(import.meta.url)
-
-const translate = require('@iamtraction/google-translate');
-const langAry = ['en', 'ko', 'ja', 'es', 'fr', 'de', 'zh', 'ru', 'pt', 'it', 'nl', 'pl', 'sv', 'tr', 'cs', 'hu', 'ro', 'fi', 'da', 'no', 'vi', 'el', 'bg', 'th', 'id', 'hi', 'ar', 'he', 'ur', 'fa', 'ps', 'fil', 'tl', 'ms', 'bn', 'pa', 'gu', 'ta', 'te', 'kn', 'ml', 'si', 'am', 'ne', 'mr', 'sa', 'mn', 'my', 'km', 'lo', 'bo', 'cy', 'jv', 'su', 'gl', 'ka', 'az', 'eu', 'is', 'mk', 'af', 'sq', 'hy', 'be', 'bs', 'hr', 'sr', 'mt', 'ga', 'yi', 'sw', 'kk', 'ky', 'tg', 'tk', 'uz', 'tt', 'bn', 'ka', 'hy', 'az', 'eu', 'is', 'mk', 'af', 'sq', 'hy', 'be', 'bs', 'hr', 'sr', 'mt', 'ga', 'yi', 'sw', 'kk', 'ky', 'tg', 'tk', 'uz', 'tt', 'bn', 'ka', 'hy', 'az', 'eu', 'is', 'mk', 'af', 'sq', 'hy', 'be', 'bs', 'hr', 'sr', 'mt', 'ga', 'yi', 'sw', 'kk', 'ky', 'tg', 'tk', 'uz', 'tt', 'bn', 'ka', 'hy', 'az', 'eu', 'is', 'mk', 'af', 'sq', 'hy', 'be', 'bs', 'hr', 'sr', 'mt', 'ga', 'yi', 'sw', 'kk', 'ky', 'tg', 'tk', 'uz', 'tt', 'bn', 'ka', 'hy', 'az', 'eu', 'is', 'mk', 'af', 'sq', 'hy', 'be', 'bs', 'hr', 'sr', 'mt', 'ga', 'yi', 'sw', 'kk', 'ky', 'tg', 'tk'];
+const dialects = [
+    'en', 'ko', 'ja', 'es', 'fr', 'de', 'zh', 'ru', 'pt', 'it', 'nl', 'pl', 'sv', 'tr', 'cs', 'hu', 'ro', 'fi', 'da', 'no', 'vi', 'el', 'bg',
+    'th', 'id', 'hi', 'ar', 'he', 'ur', 'fa', 'ps', 'fil', 'tl', 'ms', 'bn', 'pa', 'gu', 'ta', 'te', 'kn', 'ml', 'si', 'am', 'ne', 'mr', 'sa',
+    'mn', 'my', 'km', 'lo', 'bo', 'cy', 'jv', 'su', 'gl', 'ka', 'az', 'eu', 'is', 'mk', 'af', 'sq', 'hy', 'be', 'bs', 'hr', 'sr', 'mt', 'ga',
+    'yi', 'sw', 'kk', 'ky', 'tg', 'tk', 'uz', 'tt'
+];
 
 const client = new Client({
     intents: [
@@ -24,15 +27,26 @@ client.once(Events.ClientReady, (c) => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-const prefix = "!"; // Prefix for commands
+const commandPrefix = "!";
 
-client.on(Events.MessageCreate, (message) => {
+client.on(Events.MessageCreate, async (message) => {
+    if (message.author.bot) return;
+
     const content = message.content.trim();
-    if (!content.startsWith(prefix)) return; // Ignore messages that don't start with the prefix
 
-    const args = content.slice(prefix.length).trim().split(/ +/); // Split the message into arguments
-    const command = args.shift().toLowerCase(); // Get the command name
-    console.log(command, args);
+    let isCommand = false;
+    let args = [];
+    if (content.startsWith(commandPrefix)) {
+        args = content.slice(commandPrefix.length).trim().split(/ +/);
+        isCommand = true;
+    } else if (message.mentions.has(client.user)) {
+        args = content.split(/ +/).slice(1);
+        isCommand = true;
+    }
+
+    if (!isCommand) return;
+
+    const command = args.shift()?.toLowerCase();
 
     const commands = {
         help: () => {
@@ -44,23 +58,30 @@ client.on(Events.MessageCreate, (message) => {
             );
         },
         langlist: () => {
-            message.reply(`Available code languages (${langAry.length}) :\n ${langAry.join(", ")}`);
+            message.reply(`Available code languages (${dialects.length}) :\n ${dialects.join(", ")}`);
         },
         translate: () => {
-            
-            const lang = args.shift().toLowerCase();
-            if (!langAry.includes(lang)) return message.reply(`Invalid language code. Please use a valid language code. For a list of language codes, use ${prefix}langlist`);
+            const lang = args.shift()?.toLowerCase();
+
+            if (!lang || !dialects.includes(lang)) {
+                return message.reply(`Invalid language code. Please use a valid language code. For a list of language codes, use ${commandPrefix}langlist`);
+            }
+
             const text = args.join(" ");
-            if (!text) return message.reply(`Please provide text to translate.`);
+            if (!text) {
+                return message.reply(`Please provide text to translate.`);
+            }
+
             translate(text, { to: lang }).then(res => {
                 message.reply(`Translated text:\n ${res.text}`);
-            }).catch(err => {
+            }).catch((err) => {
                 console.error(err);
+                message.reply(`An error occurred while translating.`);
             });
         }
     };
 
-    if (command in commands) {
+    if (command && commands[command]) {
         commands[command]();
     }
 });
